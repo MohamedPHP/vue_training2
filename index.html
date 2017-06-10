@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <style media="screen">
+        #textAndbtn {
+            position: absolute;
+            top: 50px;
+            left: 500px;
+            z-index: 10;
+            border: 1px solid #ccc;
+            background-color: #eee;
+            padding: 10px;
+        }
+    </style>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="container">
+        <div id="textAndbtn" style="display:none">
+            <input class="form-control" type="text" v-model="message" name="name" value="{{ message }}">
+            <br>
+            <button type="button" class="btn btn-primary brn-sm btn-block" @click="doneEditMessage">Done</button>
+        </div>
+        <br><br>
+        <h2>{{ message }}</h2>
+        <input @click="editMessage" type="button" class="btn btn-primary btn-sm" value="Change Message">
+        <hr>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="panel panel-{{ item.compleated == true ? 'success' : 'danger' }}" v-if="items.length > 0" v-for="(index, item) in items">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ item.head }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        {{ item.taskcontent }}
+                        <hr>
+                        <button type="button" class="btn btn-primary btn-sm" @click="item.compleated = !item.compleated">{{ item.compleated == true ? 'completed' : 'not yet'}}</button>
+                        <button type="button" class="btn btn-danger btn-sm" @click="deleteItem" data-index="{{ index }}">remove</button>
+                    </div>
+                </div>
+                <div v-if="items.length == 0" class="alert alert-danger">No Data Here</div>
+            </div>
+            <div class="col-md-4">
+                <form action="#" method="post">
+                    <input id="heading" class="form-control" type="text" placeholder="heading">
+                    <br>
+                    <textarea id="content" class="form-control" name="name" rows="6" cols="40" placeholder="content"></textarea>
+                    <br>
+                    <button @click="addItem" type="button" class="btn btn-primary btn-block">Add Item</button>
+                </form>
+            </div>
+        </div>
+
+        <br><br>
+        <br><br>
+        <pre>{{ $data | json }}</pre>
+    </div>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="vue.min.js"></script>
+    <script type="text/javascript">
+        var vm = new Vue({
+            el: 'body',
+            data: {
+                message: 'Good List',
+                items: [
+                {
+                    head: 'frist task',
+                    taskcontent: 'this is the frist task',
+                    compleated: false,
+                },
+                {
+                    head: 'second task',
+                    taskcontent: 'this is the second task',
+                    compleated: false,
+                },
+                ],
+            },
+            methods: {
+                addItem: function (e) {
+                    e.preventDefault();
+                    this.items.push({
+                        head: document.getElementById('heading').value,
+                        taskcontent: document.getElementById('content').value,
+                        compleated: false,
+                    });
+                    document.getElementById('heading').value = '';
+                    document.getElementById('content').value = '';
+                },
+                deleteItem: function (e) {
+                    this.items.splice(e.path[0].attributes[2].value, 1);
+                },
+                editMessage: function (e) {
+                    $('#textAndbtn').fadeIn(500);
+                },
+                doneEditMessage: function (e) {
+                    $('#textAndbtn').fadeOut(500);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
